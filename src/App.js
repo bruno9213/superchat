@@ -8,15 +8,17 @@ import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-firebase.initializeApp({
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_PUBLIC_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-})
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_PUBLIC_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -27,15 +29,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>Best chat for noobs</p><SignOut />
+        <h1>Best chat for noobs</h1>
+        <SignOut />
       </header>
 
       <section>
         {user ? <ChatRoom /> : <SignIn />}
-
       </section>
     </div>
-  );
+  )
 }
 
 function SignIn(){
@@ -78,9 +80,7 @@ function ChatRoom(){
     })
 
     setFormValue('');
-
-    dummy.current.scrollIntoView({ behavior: 'smooth'});
-
+    dummy.current.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -92,10 +92,8 @@ function ChatRoom(){
 
     </main>
 
-
-
     <form onSubmit={sendMessage}>
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)}/>
+      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="diz alguma coisa"/>
       <button type="submit">enviar</button>
 
     </form>
@@ -111,12 +109,10 @@ function ChatMessage(props){
 
 
   return (
-    <div className={'message ${messageClass}'}>
-      <img src={photoURL} />
+    <div className={`message ${messageClass}`}>
+      <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} />
       <p>{text}</p>
-      
     </div>
-
   )
 }
 
