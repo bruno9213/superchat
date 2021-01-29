@@ -8,7 +8,7 @@ import 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: process.env.REACT_APP_FIREBASE_PUBLIC_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
@@ -16,9 +16,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
-};
-
-firebase.initializeApp(firebaseConfig);
+});
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -29,7 +27,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Best chat for noobs</h1>
+        <h2>Rage chat</h2>
         <SignOut />
       </header>
 
@@ -61,7 +59,7 @@ function ChatRoom(){
   const dummy = useRef();
 
   const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(25);
+  const query = messagesRef.orderBy('createdAt'); //const query = messagesRef.orderBy('createdAt').limit(25);
 
   const [messages] = useCollectionData(query, {idField: 'id'});
 
@@ -84,21 +82,19 @@ function ChatRoom(){
   }
 
   return (
-    <>
+    <div>
+
     <main>
       {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)} 
-
       <div ref={dummy}></div>
-
     </main>
 
     <form onSubmit={sendMessage}>
-      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="diz alguma coisa"/>
-      <button type="submit">enviar</button>
-
+      <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Say something noob"/>
+      <button type="submit">Send</button>
     </form>
 
-    </>
+    </div>
   )
 }
 
@@ -107,10 +103,9 @@ function ChatMessage(props){
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
-
   return (
     <div className={`message ${messageClass}`}>
-      <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} alt=""/>
+      <img src={photoURL} alt=""/>
       <p>{text}</p>
     </div>
   )
